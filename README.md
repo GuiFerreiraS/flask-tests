@@ -2,6 +2,10 @@
 
 `pip install -r requirements.txt`
 
+## Swagger
+
+`http://localhost:5000/swagger-ui`
+
 ## Running
 
 `flask run`
