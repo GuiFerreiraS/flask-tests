@@ -2,6 +2,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from passlib.hash import pbkdf2_sha256
 from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity, get_jwt
+from flask_babel import gettext
 
 from db import db
 from models import UserModel
@@ -9,6 +10,8 @@ from schemas import UserSchema
 from blocklist import BLOCKLIST
 
 blp = Blueprint("users", __name__, description='')
+
+_ = gettext
 
 
 @blp.route('/register')
@@ -48,7 +51,7 @@ class UserLogin(MethodView):
             )
             return {"access_token": access_token, "refresh_token": refresh_token}
 
-        abort(401, "Invalid credentials")
+        abort(401, message=_("Invalid credentials"))
 
 
 @blp.route('/refresh')

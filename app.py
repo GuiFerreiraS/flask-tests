@@ -1,9 +1,10 @@
 import os
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, g, request
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from flask_babel import Babel, gettext, ngettext
 from dotenv import load_dotenv
 
 from db import db
@@ -13,6 +14,15 @@ from resources.item import blp as ItemBlueprint
 from resources.store import blp as StoreBlueprint
 from resources.tag import blp as TagBlueprint
 from resources.user import blp as UserBlueprint
+
+
+_ = gettext
+
+
+def get_locale():
+    # try to guess the language from the user accept
+    # example.  The best match wins.
+    return request.accept_languages.best_match(['en', 'pt', 'fr', 'es'])
 
 
 def create_app(db_url=None):
@@ -31,6 +41,7 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
     migrate = Migrate(app, db)
+    babel = Babel(app, configure_jinja=False, locale_selector=get_locale)
     api = Api(app)
 
     app.config["JWT_SECRET_KEY"] = "27891496553591875728480739109235936392"
@@ -81,7 +92,7 @@ def create_app(db_url=None):
     @jwt.unauthorized_loader
     def missing_token_callback(error):
         return (
-            jsonify({"message": "Request does not contain an access token.",
+            jsonify({"message": _('Request does not contain an access token.'),
                     "error": "authorization_required"}),
             401
         )
