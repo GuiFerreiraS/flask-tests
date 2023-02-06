@@ -10,8 +10,6 @@ pip install -r requirements.txt
 
 ## Translating
 
-### Creating .pot file
-
 Command to extract strings in the code:
 
 ```
@@ -40,6 +38,14 @@ Then let pybabel merge the changes:
 
 ```
 pybabel update -i messages.pot -d translations
+```
+
+### Creating csv from po and po from csv
+
+```
+pip install translate-toolkit
+po2csv [po file path] [output .csv filename]
+csv2po [csv file path] [output .po filename]
 ```
 
 ## Running
